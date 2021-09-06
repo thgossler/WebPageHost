@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "WebPageHost": {
+      "commandName": "Project",
+      "commandLineArgs": "https://www.heise.de"
+    }
+  }
+}
