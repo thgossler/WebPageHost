@@ -47,9 +47,9 @@ namespace WebPageHost
             [CommandOption("-t|--title")]
             public string? WindowTitle { get; init; }
 
-            [Description("Window size (e.g. 1920x1080), supported named values: \"Last\". Default: \"1280x800\"")]
+            [Description("Window size (e.g. 1024x768), supported named values: \"Last\". Default: \"1024x768\"")]
             [CommandOption("-s|--size")]
-            [DefaultValue("1280x800")]
+            [DefaultValue("1024x768")]
             public string WindowSizeArgument { get; init; }
 
             public Size WindowSize
@@ -107,10 +107,15 @@ namespace WebPageHost
                 }
             }
 
-            [Description("Target monitor number (e.g. 0 for first monitor). Default: 0")]
+            [Description("Target monitor number (e.g. 0 for first monitor). Default: primary monitor")]
             [CommandOption("-m|--monitor")]
-            [DefaultValue("0")]
+            [DefaultValue("-1")]
             public int MonitorNumber { get; init; }
+
+            [Description("Keep window always on top of all other windows (top-most).")]
+            [CommandOption("-o|--ontop")]
+            [DefaultValue(false)]
+            public bool TopMost { get; init; }
 
             // Settings-level validation
             public override ValidationResult Validate()
@@ -138,7 +143,7 @@ namespace WebPageHost
                     return ValidationResult.Error("Invalid window state specified (allowed values: \"Normal\" | \"Minimized\" | \"Maximized\")");
                 }
 
-                if (MonitorNumber < 0 || MonitorNumber >= Screen.AllScreens.Length)
+                if (MonitorNumber < -1 || MonitorNumber >= Screen.AllScreens.Length)
                 {
                     var numOfMonitors = Screen.AllScreens.Length;
                     return ValidationResult.Error(String.Format("Invalid monitor number specified (number of monitors: {0}, value must be in range 0..{1})", numOfMonitors, numOfMonitors-1));
@@ -170,19 +175,55 @@ namespace WebPageHost
 
             form.AutoScaleMode = AutoScaleMode.Dpi;
 
+            // Monitor placement
+            var monitor = settings.MonitorNumber == -1 ? Screen.PrimaryScreen : Screen.AllScreens[settings.MonitorNumber];
+            Point dpi = ScreenExtensions.GetDpi(monitor, DpiType.Effective);
+            var scaleFactor = (double)dpi.X / 96;
+            T Scale<T>(T value)
+            {
+                T result = default(T);
+                if (value is int)
+                {
+                    int val = (int)(object)value;
+                    val = (int)(val * scaleFactor);
+                    result = (T)(object)val;
+                }
+                else if (typeof(T) == typeof(Point))
+                {
+                    Point val = (Point)(object)value;
+                    val.X = (int)(val.X * scaleFactor);
+                    val.Y = (int)(val.Y * scaleFactor);
+                    result = (T)(object)val;
+                }
+                else if (typeof(T) == typeof(Size))
+                {
+                    Size val = (Size)(object)value;
+                    val.Width = (int)(val.Width * scaleFactor);
+                    val.Height = (int)(val.Height * scaleFactor);
+                    result = (T)(object)val;
+                }
+                else if (typeof(T) == typeof(Rectangle))
+                {
+                    Rectangle val = (Rectangle)(object)value;
+                    val.X = (int)(val.X * scaleFactor);
+                    val.Y = (int)(val.Y * scaleFactor);
+                    val.Width = (int)(val.Width * scaleFactor);
+                    val.Height = (int)(val.Height * scaleFactor);
+                    result = (T)(object)val;
+                }
+                return result;
+            }
+
             // Window size
             if (settings.WindowSizeArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase))
             {
                 // TODO: handle "Last" correctly (save/load size)
-                form.Size = new Size { Width = 1280, Height = 800 };
+                form.Size = new Size { Width = Scale(1024), Height = Scale(768) };
             }
             else
             {
-                form.Size = settings.WindowSize;
+                form.Size = Scale(settings.WindowSize);
             }
-
-            // Monitor placement
-            var monitor = Screen.AllScreens[settings.MonitorNumber];
 
             // Window position
             form.StartPosition = FormStartPosition.Manual;
@@ -197,7 +238,6 @@ namespace WebPageHost
             }
             else if (settings.WindowPositionArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase))
             {
-
                 // TODO: handle "Last" correctly (save/load position)
                 form.Location = new Point { X = 100, Y = 100 };
             }
@@ -209,6 +249,9 @@ namespace WebPageHost
             // Window state
             form.WindowState = settings.WindowState;
 
+            // Top-most
+            form.TopMost = settings.TopMost;
+
             Application.Run(form);
 
             return 0;
@@ -219,5 +262,34 @@ namespace WebPageHost
             var lastUrl = (sender as MainForm).Url;
             AnsiConsole.MarkupLine($"LastUrl=[green]{lastUrl}[/]");
         }
+    }
+
+    public static class ScreenExtensions
+    {
+        public static Point GetDpi(this Screen screen, DpiType dpiType)
+        {
+            var pnt = new Point(screen.Bounds.Left + 1, screen.Bounds.Top + 1);
+            var mon = MonitorFromPoint(pnt, 2/*MONITOR_DEFAULTTONEAREST*/);
+            uint dpiX;
+            uint dpiY;
+            GetDpiForMonitor(mon, dpiType, out dpiX, out dpiY);
+            return new Point { X = (int)dpiX, Y = (int)dpiY };
+        }
+
+        //https://msdn.microsoft.com/en-us/library/windows/desktop/dd145062(v=vs.85).aspx
+        [DllImport("User32.dll")]
+        private static extern IntPtr MonitorFromPoint([In] Point pt, [In] uint dwFlags);
+
+        //https://msdn.microsoft.com/en-us/library/windows/desktop/dn280510(v=vs.85).aspx
+        [DllImport("Shcore.dll")]
+        private static extern IntPtr GetDpiForMonitor([In] IntPtr hmonitor, [In] DpiType dpiType, [Out] out uint dpiX, [Out] out uint dpiY);
+    }
+
+    //https://msdn.microsoft.com/en-us/library/windows/desktop/dn280511(v=vs.85).aspx
+    public enum DpiType
+    {
+        Effective = 0,
+        Angular = 1,
+        Raw = 2,
     }
 }

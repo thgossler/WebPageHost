@@ -43,6 +43,10 @@ namespace WebPageHost
             }
             this.Url = url;
             this.Title = title;
+
+            // TODO: Rename and clean-up WebView2 user data folder on exit, add option to keep it
+            // (https://docs.microsoft.com/en-us/microsoft-edge/webview2/concepts/user-data-folder)
+
             InitializeComponent();
         }
 
@@ -58,7 +62,7 @@ namespace WebPageHost
 
         private void WebView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
         {
-            webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested; ;
+            webView.CoreWebView2.NewWindowRequested += CoreWebView2_NewWindowRequested;
         }
 
         private void CoreWebView2_NewWindowRequested(object sender, CoreWebView2NewWindowRequestedEventArgs e)

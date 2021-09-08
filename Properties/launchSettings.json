@@ -2,7 +2,7 @@
   "profiles": {
     "WebPageHost": {
       "commandName": "Project",
-      "commandLineArgs": "https://www.heise.de -m 0 -s 1920x1080 -p 100,100 -w Maximized -t \"Test\""
+      "commandLineArgs": "https://www.google.de -m 0 -s 800x800 -p 100,100 -w Normal -t \"Google Search Homepage\" -o"
     }
   }
 }
