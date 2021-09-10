@@ -1,6 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Title>WebPageHost</Title>
+    <Description>Console CLI app to open a web page from command line in a WebView2 (Chromium).</Description>
+    <ProductName>WebPageHost (Preview)</ProductName>
+    <Copyright>Copyright © Thomas Goßler 2021</Copyright>
+    <Company>Thomas Goßler</Company>
+  </PropertyGroup>
+
+  <Import Project="Version.props" />
+
+  <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0-windows7.0</TargetFramework>
     <DisableWinExeOutputInference>true</DisableWinExeOutputInference>
@@ -11,11 +21,33 @@
     <SelfContained>true</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+    <Deterministic>false</Deterministic>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.902.49" />
     <PackageReference Include="Spectre.Console" Version="0.41.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
