@@ -139,7 +139,7 @@ namespace WebPageHost
 
         private static void DeleteWebView2UserDataFolder(string userDataFolderName, MainForm form)
         {
-            var exeFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            var exeFilePath = AppContext.BaseDirectory;
             var exeDirPath = Path.GetDirectoryName(exeFilePath);
             var dirInfo = new DirectoryInfo(exeDirPath);
             var userDataFolder = (DirectoryInfo)dirInfo.GetDirectories(userDataFolderName).GetValue(0);
@@ -160,6 +160,7 @@ namespace WebPageHost
                         if (!userDataFolder.Exists)
                         {
                             success = true;
+                            break;
                         }
                     }
                     catch (UnauthorizedAccessException) { }
@@ -170,7 +171,7 @@ namespace WebPageHost
                 }
                 if (!success)
                 {
-                    Console.Error.WriteLine(String.Format("ERROR: WebView2 user data folder '{0}' could not be deleted", userDataFolder.FullName));
+                    Trace.TraceWarning(String.Format("ERROR: WebView2 user data folder '{0}' could not be deleted", userDataFolder.FullName));
                 }
                 else
                 {
