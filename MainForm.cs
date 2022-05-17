@@ -80,7 +80,7 @@ namespace WebPageHost
             this.webView.Parent = this;
             this.webView.Name = "webView";
             this.webView.CreationProperties = null;
-            var padding = 2;
+            var padding = 0;
             this.webView.Bounds = new Rectangle(padding, padding, ClientSize.Width - 2*padding, ClientSize.Height - 2*padding);
             this.webView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             this.webView.DefaultBackgroundColor = System.Drawing.Color.White;
@@ -114,7 +114,11 @@ namespace WebPageHost
                 WebViewDOMContentLoaded?.Invoke(s, e);
 
                 var coreWebView = (CoreWebView2)s;
-                var favIconUrl = await coreWebView?.ExecuteScriptAsync("document.querySelector(\"link[rel~= 'icon']\").href");
+                var favIconUrl = string.Empty;
+                if (coreWebView != null)
+                {
+                    favIconUrl = await coreWebView.ExecuteScriptAsync("document.querySelector(\"link[rel~= 'icon']\").href");
+                }
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
                 if (!String.IsNullOrEmpty(favIconUrl))
                 {
@@ -148,14 +152,14 @@ namespace WebPageHost
                 {
                     try
                     {
-                        using (var ms = new MemoryStream(imageBytes))
+                        await using (var ms = new MemoryStream(imageBytes))
                         {
                             this.Icon = new Icon(ms);
                         }
                     }
                     catch (Exception)
                     {
-                        using (var ms = new MemoryStream(imageBytes))
+                        await using (var ms = new MemoryStream(imageBytes))
                         {
                             var bitmap = new Bitmap(ms);
                             var iconHandle = bitmap.GetHicon();

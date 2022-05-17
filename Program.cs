@@ -1,22 +1,7 @@
 #nullable disable warnings
 
-using Microsoft.Win32;
-using Spectre.Console;
 using Spectre.Console.Cli;
 using System;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Drawing;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Security;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Windows.Forms;
-using WebPageHost.Properties;
-using WindowsInput;
-using WindowsInput.Native;
 
 namespace WebPageHost
 {
@@ -25,12 +10,22 @@ namespace WebPageHost
         [STAThread]
         static int Main(string[] args)
         {
-            var app = new CommandApp<OpenCommand>();
+            var app = new CommandApp();
             app.Configure(config =>
             {
                 config.SetApplicationName("WebPageHost");
+
+                config.AddCommand<OpenCommand>("open")
+                    .WithDescription("Opens the URL in a new window with an embedded web browser.")
+                    .WithExample(new[] { "open", "https://www.google.com/", "--zoomfactor", "0.6" });
+
+                config.AddCommand<CleanupCommand>("cleanup")
+                    .WithDescription("Resets the current user's web browser persistent data folder and registry settings.")
+                    .WithExample(new[] { "cleanup" });
+
                 config.ValidateExamples();
             });
+            
             return app.Run(args);
         }
     }

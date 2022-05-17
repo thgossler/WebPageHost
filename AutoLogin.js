@@ -28,8 +28,12 @@ if (pwdElement) {
         if (usrElement) {
             usrElement.focus({ preventScroll: true });
             usrElement.value = "$(USERNAME)";
-            pwdElement.focus({ preventScroll: true });
-            pwdElement.value = "$(PASSWORD)";
+            let pwd = "$(PASSWORD)";
+            let isPwdProvided = pwd.length > 0;
+            setTimeout(function () {
+                pwdElement.focus({ preventScroll: isPwdProvided });
+                pwdElement.value = pwd;
+            }, 1000);
             // Enter key press needs to be simulated outside script
         }
     }

@@ -11,18 +11,16 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
-using WebPageHost.Properties;
 using WindowsInput;
 using WindowsInput.Native;
 using static WebPageHost.ScreenExtensions;
 
 namespace WebPageHost
 {
-
     internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
     {
-        [SuppressMessage("AsyncUsage", "AsyncFixer03:Fire-and-forget async-void methods or delegates", Justification = "<Pending>")]
         public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
         {
             AnsiConsole.MarkupLine($"Opening URL [green]{settings.Url}[/]...");
@@ -41,7 +39,7 @@ namespace WebPageHost
             var scaleFactor = (float)dpi.X / 96;
 
             // Define WebView2 user folder name
-            var userDataFolderName = Environment.UserName + ".WebView2";
+            var userDataFolderName = Common.WebView2UserDataFolderName;
 
             var form = new MainForm(userDataFolderName, settings.Url, settings.WindowTitle);
             form.FormLoaded += (s, e) =>
@@ -61,13 +59,9 @@ namespace WebPageHost
             };
 
             // Try to auto-login on the web page with the specified credentials
-            if (!String.IsNullOrWhiteSpace(settings.LoginCredentials))
+            if (!String.IsNullOrWhiteSpace(settings.Username))
             {
-                var loginCreds = settings.LoginCredentials.Trim();
-                var separatorIndex = loginCreds.IndexOf(',');
-                var username = loginCreds.Substring(0, separatorIndex);
-                var password = loginCreds.Substring(separatorIndex+1);
-                form.WebViewDOMContentLoaded += async (s, e) =>
+                async void webViewDOMContentLoaded(object? s, EventArgs e)
                 {
                     var result = await form.webView.CoreWebView2.ExecuteScriptAsync(
                         "document.querySelector(\"input[type~='password']\") != null && " +
@@ -75,14 +69,23 @@ namespace WebPageHost
                     var isLoginPage = Boolean.Parse(result.Replace("\"", ""));
                     if (isLoginPage)
                     {
-                        var autoLoginJs = Resources.AutoLoginJs;
-                        autoLoginJs = autoLoginJs.Replace("$(USERNAME)", username).Replace("$(PASSWORD)", password);
+                        var assembly = typeof(Program).Assembly;
+                        using var stream = assembly.GetManifestResourceStream("WebPageHost.AutoLogin.js");
+                        using var reader = new StreamReader(stream);
+                        var autoLoginJs = reader.ReadToEnd();
+                        autoLoginJs = autoLoginJs.Replace("$(USERNAME)", settings.Username);
+                        var passwordSpecified = !String.IsNullOrWhiteSpace(settings.Password);
+                        autoLoginJs = autoLoginJs.Replace("$(PASSWORD)", passwordSpecified ? settings.Password : "");
                         await form.webView.CoreWebView2.ExecuteScriptAsync(autoLoginJs);
-                        // Simulate Enter key press outside of script because it would not be trusted otherwise
-                        Thread.Sleep(1000);
-                        new InputSimulator().Keyboard.KeyPress(VirtualKeyCode.RETURN);
+                        if (passwordSpecified)
+                        {
+                            // Simulate Enter key press outside of script because it would not be trusted otherwise
+                            await Task.Delay(1000);
+                            new InputSimulator().Keyboard.KeyPress(VirtualKeyCode.RETURN);
+                        }
                     }
-                };
+                }
+                form.WebViewDOMContentLoaded += webViewDOMContentLoaded;
             }
 
             // Load the window bounds from the last start
@@ -100,7 +103,7 @@ namespace WebPageHost
 
             // Apply the specified window position argument
             form.StartPosition = FormStartPosition.Manual;
-            if (settings.WindowPositionArgument.Equals("Center", StringComparison.InvariantCultureIgnoreCase))
+            if (settings.WindowLocationArgument.Equals("Center", StringComparison.InvariantCultureIgnoreCase))
             {
                 form.Bounds = new Rectangle { 
                     X = monitor.WorkingArea.Left + (monitor.WorkingArea.Width - form.Width) / 2, 
@@ -109,13 +112,13 @@ namespace WebPageHost
                     Height = form.Height
                 };
             }
-            else if (settings.WindowPositionArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase))
+            else if (settings.WindowLocationArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase))
             {
                 form.Location = lastBounds.Location;
             }
             else
             {
-                form.Location = new Point { X = monitor.WorkingArea.Left + settings.WindowPosition.X, Y = monitor.WorkingArea.Top + settings.WindowPosition.Y };
+                form.Location = new Point { X = monitor.WorkingArea.Left + settings.WindowLocation.X, Y = monitor.WorkingArea.Top + settings.WindowLocation.Y };
             }
 
             // Apply the specified window state argument
@@ -139,44 +142,51 @@ namespace WebPageHost
 
         private static void DeleteWebView2UserDataFolder(string userDataFolderName, MainForm form)
         {
-            var exeFilePath = AppContext.BaseDirectory;
-            var exeDirPath = Path.GetDirectoryName(exeFilePath);
-            var dirInfo = new DirectoryInfo(exeDirPath);
-            var userDataFolder = (DirectoryInfo)dirInfo.GetDirectories(userDataFolderName).GetValue(0);
-            if (null != userDataFolder)
+            try
             {
-                AnsiConsole.Markup($"[grey]Cleaning-up user data...[/] ");
-
-                form.webView.Dispose(); // Ensure external browser process is exited
-
-                bool success = false;
-                int attempts = 0;
-                while (!success && attempts <= 5)
+                var exeFilePath = AppContext.BaseDirectory;
+                var exeDirPath = Path.GetDirectoryName(exeFilePath);
+                var dirInfo = new DirectoryInfo(exeDirPath);
+                var userDataFolder = (DirectoryInfo)dirInfo.GetDirectories(userDataFolderName).GetValue(0);
+                if (null != userDataFolder)
                 {
-                    attempts++;
-                    try
+                    AnsiConsole.Markup($"[grey]Cleaning-up user data...[/] ");
+
+                    form.webView.Dispose(); // Ensure external browser process is exited
+
+                    bool success = false;
+                    int attempts = 0;
+                    while (!success && attempts <= 5)
                     {
-                        userDataFolder.Delete(true);
-                        if (!userDataFolder.Exists)
+                        attempts++;
+                        try
                         {
-                            success = true;
-                            break;
+                            userDataFolder.Delete(true);
+                            if (!userDataFolder.Exists)
+                            {
+                                success = true;
+                                break;
+                            }
                         }
+                        catch (UnauthorizedAccessException) { }
+                        catch (DirectoryNotFoundException) { }
+                        catch (IOException) { }
+                        catch (SecurityException) { }
+                        Thread.Sleep(1000);
                     }
-                    catch (UnauthorizedAccessException) { }
-                    catch (DirectoryNotFoundException) { }
-                    catch (IOException) { }
-                    catch (SecurityException) { }
-                    Thread.Sleep(1000);
+                    if (!success)
+                    {
+                        Trace.TraceWarning(String.Format("ERROR: WebView2 user data folder '{0}' could not be deleted", userDataFolder.FullName));
+                    }
+                    else
+                    {
+                        AnsiConsole.MarkupLine($"[grey]Done.[/] ");
+                    }
                 }
-                if (!success)
-                {
-                    Trace.TraceWarning(String.Format("ERROR: WebView2 user data folder '{0}' could not be deleted", userDataFolder.FullName));
-                }
-                else
-                {
-                    AnsiConsole.MarkupLine($"[grey]Done.[/] ");
-                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
             }
         }
 
@@ -189,7 +199,7 @@ namespace WebPageHost
                 try
                 {
                     // Read values from registry
-                    var key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\WebPageHost");
+                    var key = Registry.CurrentUser.OpenSubKey(Common.ProgramRegistryRootKeyPath);
                     if (null != key)
                     {
                         bounds.X = (int)key.GetValue("LastWindowPosX");
@@ -214,7 +224,7 @@ namespace WebPageHost
                 lastWindowBounds = value;
 
                 // Store values in registry
-                var key = Registry.CurrentUser.CreateSubKey(@"SOFTWARE\WebPageHost");
+                var key = Registry.CurrentUser.CreateSubKey(Common.ProgramRegistryRootKeyPath);
                 key.SetValue("LastWindowPosX", lastWindowBounds.X);
                 key.SetValue("LastWindowPosY", lastWindowBounds.Y);
                 key.SetValue("LastWindowWidth", lastWindowBounds.Width);
@@ -231,6 +241,5 @@ namespace WebPageHost
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         const int SW_HIDE = 0;
-        const int SW_SHOW = 5;
     }
 }

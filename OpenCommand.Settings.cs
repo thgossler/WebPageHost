@@ -22,9 +22,9 @@ namespace WebPageHost
             [CommandOption("-t|--title")]
             public string? WindowTitle { get; init; }
 
-            [Description("Window size (e.g. 1024x768), supported named values: \"Last\". Default: \"1024x768\"")]
+            [Description("Window size (e.g. 1024x768), supported named values: \"Last\". Default: \"1280x720\"")]
             [CommandOption("-s|--size")]
-            [DefaultValue("1024x768")]
+            [DefaultValue("1280x720")]
             public string WindowSizeArgument { get; init; }
 
             public Size WindowSize
@@ -39,12 +39,12 @@ namespace WebPageHost
             }
 
 
-            [Description("Window position (e.g. 100,80), supported named values: \"Last\", \"Center\". Default: \"Center\"")]
-            [CommandOption("-p|--position")]
+            [Description("Window location (e.g. 100,80), supported named values: \"Last\", \"Center\". Default: \"Center\"")]
+            [CommandOption("-l|--location")]
             [DefaultValue("Center")]
-            public string WindowPositionArgument { get; init; }
+            public string WindowLocationArgument { get; init; }
 
-            public Point WindowPosition
+            public Point WindowLocation
             {
                 get
                 {
@@ -54,7 +54,7 @@ namespace WebPageHost
                         return Point.Empty;
                     }
                     Point pos = Point.Empty;
-                    string[] parts = WindowPositionArgument.Split(',');
+                    string[] parts = WindowLocationArgument.Split(',');
                     pos.X = int.Parse(parts[0]);
                     pos.Y = int.Parse(parts[1]);
                     return pos;
@@ -102,9 +102,18 @@ namespace WebPageHost
             [DefaultValue(false)]
             public bool KeepUserData { get; init; }
 
-            [Description("Credentials for auto-login on the web page, format: \"<username>,<password>\".")]
-            [CommandOption("-l|--login")]
-            public string? LoginCredentials { get; init; }
+            [Description("User name for auto-login on the web page.")]
+            [CommandOption("-u|--user")]
+            public string? Username { get; init; }
+
+            [Description("Password for auto-login on the web page.")]
+            [CommandOption("-p|--password")]
+            public string? Password { get; init; }
+
+            // TODO: Add option to auto-reload current web page in specified interval seconds
+
+            // TODO: Support option AllowSingleSignOnUsingOSPrimaryAccount
+
 
             public override ValidationResult Validate()
             {
@@ -116,13 +125,13 @@ namespace WebPageHost
                 }
 
                 if (!Regex.Match(WindowSizeArgument, @"\d+x\d+", RegexOptions.IgnoreCase).Success &&
-                    !WindowPositionArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase))
+                    !WindowLocationArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase))
                 {
                     return ValidationResult.Error("Invalid windows size specified (allowed values: \"<w>,<h>\")");
                 }
 
-                if (!Regex.Match(WindowPositionArgument, @"\d+,\d+", RegexOptions.IgnoreCase).Success &&
-                    !Regex.Match(WindowPositionArgument, "^(Last|Center)$", RegexOptions.IgnoreCase).Success)
+                if (!Regex.Match(WindowLocationArgument, @"\d+,\d+", RegexOptions.IgnoreCase).Success &&
+                    !Regex.Match(WindowLocationArgument, "^(Last|Center)$", RegexOptions.IgnoreCase).Success)
                 {
                     return ValidationResult.Error("Invalid window position specified (allowed values: \"<x>,<y>\" | \"Last\" | \"Center\")");
                 }
@@ -143,9 +152,9 @@ namespace WebPageHost
                     return ValidationResult.Error("Invalid zoom factor, value must be in range 0.1 .. 3})");
                 }
 
-                if (null != LoginCredentials && !LoginCredentials.Contains(","))
+                if (!String.IsNullOrEmpty(Password) && String.IsNullOrEmpty(Username))
                 {
-                    return ValidationResult.Error("Invalid login credentials specified");
+                    return ValidationResult.Error("Username was not specified");
                 }
 
                 return ValidationResult.Success();
