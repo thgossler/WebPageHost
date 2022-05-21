@@ -58,14 +58,25 @@ namespace WebPageHost
                 AnsiConsole.MarkupLine($"LastUrl=[green]{lastUrl}[/]");
             };
 
-            // Try to auto-login on the web page with the specified credentials
-            if (!String.IsNullOrWhiteSpace(settings.Username))
+            // Refresh the current web page after the specified interval
+            System.Threading.Timer refreshTimer = null;
+            if (settings.RefreshIntervalInSecs > 0)
             {
-                async void webViewDOMContentLoaded(object? s, EventArgs e)
+                refreshTimer = new System.Threading.Timer(
+                    o => form?.Invoke(new Action(() => form.webView?.Reload())),
+                    settings.Url,
+                    TimeSpan.FromSeconds(1 + settings.RefreshIntervalInSecs),
+                    TimeSpan.FromSeconds(settings.RefreshIntervalInSecs));
+            }
+
+            async void webViewDOMContentLoaded(object? s, EventArgs e)
+            {
+                // Try to auto-login on the web page with the specified credentials
+                if (!String.IsNullOrWhiteSpace(settings.Username))
                 {
                     var result = await form.webView.CoreWebView2.ExecuteScriptAsync(
-                        "document.querySelector(\"input[type~='password']\") != null && " +
-                        "window.getComputedStyle(document.querySelector(\"input[type~='password']\")).visibility != 'hidden'");
+                    "document.querySelector(\"input[type~='password']\") != null && " +
+                    "window.getComputedStyle(document.querySelector(\"input[type~='password']\")).visibility != 'hidden'");
                     var isLoginPage = Boolean.Parse(result.Replace("\"", ""));
                     if (isLoginPage)
                     {
@@ -85,8 +96,8 @@ namespace WebPageHost
                         }
                     }
                 }
-                form.WebViewDOMContentLoaded += webViewDOMContentLoaded;
             }
+            form.WebViewDOMContentLoaded += webViewDOMContentLoaded;
 
             // Load the window bounds from the last start
             var lastBounds = LastWindowBounds;
@@ -105,9 +116,10 @@ namespace WebPageHost
             form.StartPosition = FormStartPosition.Manual;
             if (settings.WindowLocationArgument.Equals("Center", StringComparison.InvariantCultureIgnoreCase))
             {
-                form.Bounds = new Rectangle { 
-                    X = monitor.WorkingArea.Left + (monitor.WorkingArea.Width - form.Width) / 2, 
-                    Y = monitor.WorkingArea.Top + (monitor.WorkingArea.Height - form.Height) / 2, 
+                form.Bounds = new Rectangle
+                {
+                    X = monitor.WorkingArea.Left + (monitor.WorkingArea.Width - form.Width) / 2,
+                    Y = monitor.WorkingArea.Top + (monitor.WorkingArea.Height - form.Height) / 2,
                     Width = form.Width,
                     Height = form.Height
                 };
@@ -129,6 +141,12 @@ namespace WebPageHost
 
             // Show the UI
             Application.Run(form);
+
+            if (null != refreshTimer)
+            {
+                refreshTimer.Dispose();
+                refreshTimer = null;
+            }
 
             // Clean-up when the application is about to close
             if (!settings.KeepUserData)

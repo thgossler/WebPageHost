@@ -5,6 +5,9 @@ using System;
 
 namespace WebPageHost
 {
+
+    // TODO: GitHub actions, DependaBot, etc.
+
     static class Program
     {
         [STAThread]

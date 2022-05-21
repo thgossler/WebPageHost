@@ -14,7 +14,7 @@ namespace WebPageHost
     {
         public sealed class Settings : CommandSettings
         {
-            [Description("URL to open (only http/https supported).")]
+            [Description("URL to open (only supports http/https protocols).")]
             [CommandArgument(0, "<url>")]
             public string Url { get; init; }
 
@@ -110,9 +110,16 @@ namespace WebPageHost
             [CommandOption("-p|--password")]
             public string? Password { get; init; }
 
-            // TODO: Add option to auto-reload current web page in specified interval seconds
+            [Description("Time interval in seconds for automatic reload.")]
+            [CommandOption("-r|--refresh")]
+            [DefaultValue(0)]
+            public int RefreshIntervalInSecs { get; init; }
 
             // TODO: Support option AllowSingleSignOnUsingOSPrimaryAccount
+
+            // TODO: Add option to only output last URL / selected value in stdout for easier parsing by callers
+
+            // TODO: Add extension mechanism: specify result content selection plugin by argument (without plugin by default the last URL is returned)
 
 
             public override ValidationResult Validate()
@@ -149,12 +156,17 @@ namespace WebPageHost
 
                 if (ZoomFactor < 0.1 || ZoomFactor > 3.0)
                 {
-                    return ValidationResult.Error("Invalid zoom factor, value must be in range 0.1 .. 3})");
+                    return ValidationResult.Error("Invalid zoom factor, value must be in range 0.1 .. 3");
                 }
 
                 if (!String.IsNullOrEmpty(Password) && String.IsNullOrEmpty(Username))
                 {
                     return ValidationResult.Error("Username was not specified");
+                }
+
+                if (RefreshIntervalInSecs < 0 || RefreshIntervalInSecs > 86400)
+                {
+                    return ValidationResult.Error("Invalid refresh interval (seconds), value must be in range 1 .. 86400 (24 hours)");
                 }
 
                 return ValidationResult.Success();
