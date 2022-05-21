@@ -46,8 +46,16 @@ namespace WebPageHost
         private string title;
         private bool isTitleGiven;
 
+        public bool AllowSso
+        {
+            get { return allowSso; }
+            set { allowSso = value; }
+        }
+        private bool allowSso;
+
+
         // MainForm
-        public MainForm(string userDataFolderName, string url, string title = "")
+        public MainForm(string userDataFolderName, string url, string title = "", bool allowSso = false)
         {
             if (String.IsNullOrWhiteSpace(userDataFolderName))
             {
@@ -61,6 +69,7 @@ namespace WebPageHost
             this.Url = url;
             this.Title = title;
             this.isTitleGiven = !String.IsNullOrWhiteSpace(title);
+            this.allowSso = allowSso;
             this.userDataFolderName = userDataFolderName;
 
             AutoScaleMode = AutoScaleMode.Dpi;
@@ -72,7 +81,7 @@ namespace WebPageHost
         {
             // Initialize WebView2
             var webViewEnv = await CoreWebView2Environment.CreateAsync(null, this.userDataFolderName,
-                new CoreWebView2EnvironmentOptions() { AllowSingleSignOnUsingOSPrimaryAccount = true });
+                new CoreWebView2EnvironmentOptions() { AllowSingleSignOnUsingOSPrimaryAccount = AllowSso });
             this.webView = new WebView2();
             this.SuspendLayout();
             this.Controls.Add(this.webView);

@@ -115,11 +115,13 @@ namespace WebPageHost
             [DefaultValue(0)]
             public int RefreshIntervalInSecs { get; init; }
 
-            // TODO: Support option AllowSingleSignOnUsingOSPrimaryAccount
+            [Description("Allow single sign-on using OS primary account.")]
+            [CommandOption("--sso")]
+            [DefaultValue(false)]
+            public bool AllowSingleSignOnUsingOSPrimaryAccount { get; init; }
 
-            // TODO: Add option to only output last URL / selected value in stdout for easier parsing by callers
 
-            // TODO: Add extension mechanism: specify result content selection plugin by argument (without plugin by default the last URL is returned)
+            // TODO: Add result extension mechanism: injected JavaScript snippet returning desired result on form closing
 
 
             public override ValidationResult Validate()

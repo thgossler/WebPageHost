@@ -41,7 +41,7 @@ namespace WebPageHost
             // Define WebView2 user folder name
             var userDataFolderName = Common.WebView2UserDataFolderName;
 
-            var form = new MainForm(userDataFolderName, settings.Url, settings.WindowTitle);
+            var form = new MainForm(userDataFolderName, settings.Url, settings.WindowTitle, settings.AllowSingleSignOnUsingOSPrimaryAccount);
             form.FormLoaded += (s, e) =>
             {
                 // Apply the specified zoom factor argument
