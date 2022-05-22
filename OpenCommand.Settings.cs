@@ -118,10 +118,10 @@ namespace WebPageHost
             [DefaultValue(0)]
             public int RefreshIntervalInSecs { get; init; }
 
-            [Description("Allow single sign-on using OS primary account.")]
-            [CommandOption("--sso")]
+            [Description("Disable single sign-on using OS primary account.")]
+            [CommandOption("--no-sso")]
             [DefaultValue(false)]
-            public bool AllowSingleSignOnUsingOSPrimaryAccount { get; init; }
+            public bool DisableSingleSignOnUsingOSPrimaryAccount { get; init; }
 
             [Description("JavaScript for customizing the output on exit.")]
             [CommandOption("-x|--resultselector")]
