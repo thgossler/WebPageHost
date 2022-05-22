@@ -17,7 +17,8 @@ namespace WebPageHost
 
                 config.AddCommand<OpenCommand>("open")
                     .WithDescription("Opens the URL in a new window with an embedded web browser.")
-                    .WithExample(new[] { "open", "https://www.google.com/", "--zoomfactor", "0.6" });
+                    .WithExample(new[] { "open", "https://www.google.com/", "--zoomfactor", "0.6" })
+                    .WithExample(new[] { "open", "https://www.google.com/", "-x", "document.title" });
 
                 config.AddCommand<CleanupCommand>("cleanup")
                     .WithDescription("Resets the current user's web browser persistent data folder and registry settings.")

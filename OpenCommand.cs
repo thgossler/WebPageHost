@@ -25,17 +25,22 @@ namespace WebPageHost
 
         public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
         {
+            // If a script for custom output is specified then do not output other logs
             bool logToStdout = String.IsNullOrWhiteSpace(settings.ResultJavaScript);
 
             if (logToStdout) AnsiConsole.MarkupLine($"Opening URL [green]{settings.Url}[/]...");
 
+            // Prepare WinForms
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            // Hide the console window now after the argument processing is done
-            var handle = GetConsoleWindow();
-            ShowWindow(handle, SW_HIDE);
+            var consoleWindowHandle = GetConsoleWindow();
+            if (settings.HideConsole)
+            {
+                // Hide the console window now after start and argument processing done
+                ShowWindow(consoleWindowHandle, SW_HIDE);
+            }
 
             // Monitor placement
             var monitor = settings.MonitorNumber == -1 ? Screen.PrimaryScreen : Screen.AllScreens[settings.MonitorNumber];
@@ -169,6 +174,12 @@ namespace WebPageHost
                 DeleteWebView2UserDataFolder(userDataFolderName, form, logToStdout);
             }
 
+            if (settings.HideConsole)
+            {
+                // Show the console window again on exit
+                ShowWindow(consoleWindowHandle, SW_SHOW);
+            }
+
             return 0;
         }
 
@@ -273,5 +284,6 @@ namespace WebPageHost
         static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         const int SW_HIDE = 0;
+        const int SW_SHOW = 5;
     }
 }

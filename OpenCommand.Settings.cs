@@ -97,10 +97,10 @@ namespace WebPageHost
             [DefaultValue(false)]
             public bool TopMost { get; init; }
 
-            [Description("Keep the WebView2 user data folder. Default: delete on exit")]
-            [CommandOption("-k|--keepuserdata")]
+            [Description("Hide the console window while the GUI is shown.")]
+            [CommandOption("--hideconsole")]
             [DefaultValue(false)]
-            public bool KeepUserData { get; init; }
+            public bool HideConsole { get; init; }
 
             [Description("User name for auto-login on the web page.")]
             [CommandOption("-u|--user")]
@@ -120,9 +120,14 @@ namespace WebPageHost
             [DefaultValue(false)]
             public bool AllowSingleSignOnUsingOSPrimaryAccount { get; init; }
 
-            [Description("Exit result selector JavaScript snippet. Will be executed in the context of the web page just before exit. The return value of the script will be returned on stdout.")]
+            [Description("JavaScript for customizing the output on exit.")]
             [CommandOption("-x|--resultselector")]
             public string? ResultJavaScript { get; init; }
+
+            [Description("Keep the WebView2 user data folder on exit.")]
+            [CommandOption("-k|--keepuserdata")]
+            [DefaultValue(false)]
+            public bool KeepUserData { get; init; }
 
             public override ValidationResult Validate()
             {
