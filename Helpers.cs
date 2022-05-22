@@ -6,6 +6,9 @@ using System.Security;
 
 namespace WebPageHost
 {
+    /// <summary>
+    /// Static helper functions used across commands.
+    /// </summary>
     static class Helpers
     {
         public static T Scale<T>(T value, float scaleFactor) where T : struct

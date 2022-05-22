@@ -1,3 +1,7 @@
+//
+// JavaScript for injection into any web page which finds a login form 
+// and eventually fills-in username and password.
+//
 var inputs = document.getElementsByTagName('input');
 var len = inputs.length;
 var pwdElement = null;

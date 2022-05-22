@@ -21,8 +21,12 @@ namespace WebPageHost
 {
     internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
     {
-        private volatile string javaScriptResult = null;
-
+        /// <summary>
+        /// Open command implementation.
+        /// </summary>
+        /// <param name="context">The command context.</param>
+        /// <param name="settings">The provided command line arguments.</param>
+        /// <returns>Program exit code</returns>
         public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
         {
             // If a script for custom output is specified then do not output other logs
@@ -30,11 +34,11 @@ namespace WebPageHost
 
             if (logToStdout) AnsiConsole.MarkupLine($"Opening URL [green]{settings.Url}[/]...");
 
-            // Prepare WinForms
+            // Initialize WinForms
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+            
             var consoleWindowHandle = GetConsoleWindow();
             if (settings.HideConsole)
             {
@@ -42,24 +46,24 @@ namespace WebPageHost
                 ShowWindow(consoleWindowHandle, SW_HIDE);
             }
 
-            // Monitor placement
+            // Determine monitor placement
             var monitor = settings.MonitorNumber == -1 ? Screen.PrimaryScreen : Screen.AllScreens[settings.MonitorNumber];
             Point dpi = ScreenExtensions.GetMonitorDpi(monitor, DpiType.Effective);
             var scaleFactor = (float)dpi.X / 96;
 
-            // Define WebView2 user folder name
+            // Get WebView2 user folder name
             var userDataFolderName = Common.WebView2UserDataFolderName;
 
             var form = new MainForm(userDataFolderName, settings.Url, settings.WindowTitle, settings.AllowSingleSignOnUsingOSPrimaryAccount);
             form.FormLoaded += (s, e) =>
             {
-                // Apply the specified zoom factor argument
+                // Apply the specified zoom factor
                 var form = (MainForm)s;
                 form.webView.ZoomFactor = (double)settings.ZoomFactor;
             };
             form.FormClosing += async (s, e) =>
             {
-                // Use specified JavaScript to get exit result
+                // Get a custom exit result by executing the provided JavaScript statement on the web page
                 if (!String.IsNullOrWhiteSpace(settings.ResultJavaScript) && null == javaScriptResult)
                 {
                     javaScriptResult = string.Empty;
@@ -183,6 +187,12 @@ namespace WebPageHost
             return 0;
         }
 
+        /// <summary>
+        /// Delete the WebView2 data folder for the current user.
+        /// </summary>
+        /// <param name="userDataFolderName">Folder name without path, relative to the folder of the program executable.</param>
+        /// <param name="form">Referance to main form in order to access the WebView2 instance.</param>
+        /// <param name="logToStdout">Specifies whether information logs shall be written to standard output.</param>
         private static void DeleteWebView2UserDataFolder(string userDataFolderName, MainForm form, bool logToStdout)
         {
             try
@@ -233,7 +243,9 @@ namespace WebPageHost
             }
         }
 
-        private Rectangle lastWindowBounds;
+        /// <summary>
+        /// Persistent store for the last recently used window bounds (stored in Windows Registry)
+        /// </summary>
         public Rectangle LastWindowBounds
         {
             get
@@ -275,6 +287,10 @@ namespace WebPageHost
                 key.Close();
             }
         }
+        private Rectangle lastWindowBounds;
+
+        // Temporary storage for the custom result from the injected JavaScript
+        private volatile string javaScriptResult = null;
 
         // Interop
         [DllImport("kernel32.dll")]

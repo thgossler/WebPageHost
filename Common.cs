@@ -2,6 +2,9 @@
 
 namespace WebPageHost
 {
+    /// <summary>
+    /// Common definitions used across commands.
+    /// </summary>
     internal static class Common
     {
         public static string ProgramRegistryRootKeyPath = @"SOFTWARE\WebPageHost";

@@ -12,6 +12,9 @@ namespace WebPageHost
 {
     internal sealed partial class OpenCommand
     {
+        /// <summary>
+        /// Command line arguments for the open command.
+        /// </summary>
         public sealed class Settings : CommandSettings
         {
             [Description("URL to open (only supports http/https protocols).")]
