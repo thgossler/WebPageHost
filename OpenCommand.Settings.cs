@@ -120,9 +120,9 @@ namespace WebPageHost
             [DefaultValue(false)]
             public bool AllowSingleSignOnUsingOSPrimaryAccount { get; init; }
 
-
-            // TODO: Add result extension mechanism: injected JavaScript snippet returning desired result on form closing
-
+            [Description("Exit result selector JavaScript snippet. Will be executed in the context of the web page just before exit. The return value of the script will be returned on stdout.")]
+            [CommandOption("-x|--resultselector")]
+            public string? ResultJavaScript { get; init; }
 
             public override ValidationResult Validate()
             {

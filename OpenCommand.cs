@@ -21,9 +21,13 @@ namespace WebPageHost
 {
     internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
     {
+        private volatile string javaScriptResult = null;
+
         public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
         {
-            AnsiConsole.MarkupLine($"Opening URL [green]{settings.Url}[/]...");
+            bool logToStdout = String.IsNullOrWhiteSpace(settings.ResultJavaScript);
+
+            if (logToStdout) AnsiConsole.MarkupLine($"Opening URL [green]{settings.Url}[/]...");
 
             Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Application.EnableVisualStyles();
@@ -48,14 +52,24 @@ namespace WebPageHost
                 var form = (MainForm)s;
                 form.webView.ZoomFactor = (double)settings.ZoomFactor;
             };
-            form.FormClosing += (s, e) =>
+            form.FormClosing += async (s, e) =>
             {
+                // Use specified JavaScript to get exit result
+                if (!String.IsNullOrWhiteSpace(settings.ResultJavaScript) && null == javaScriptResult)
+                {
+                    javaScriptResult = string.Empty;
+                    e.Cancel = true;
+                    javaScriptResult = await form.webView.ExecuteScriptAsync(settings.ResultJavaScript);
+                    AnsiConsole.WriteLine(javaScriptResult);
+                    form.Close();
+                }
+
                 // Save current windows bounds for potential use on next start
                 this.LastWindowBounds = form.Bounds;
 
                 // Print the current browser URL to stdout for external processing
                 var lastUrl = form.Url;
-                AnsiConsole.MarkupLine($"LastUrl=[green]{lastUrl}[/]");
+                if (logToStdout) AnsiConsole.MarkupLine($"LastUrl=[green]{lastUrl}[/]");
             };
 
             // Refresh the current web page after the specified interval
@@ -152,13 +166,13 @@ namespace WebPageHost
             if (!settings.KeepUserData)
             {
                 // Delete current user data folder
-                DeleteWebView2UserDataFolder(userDataFolderName, form);
+                DeleteWebView2UserDataFolder(userDataFolderName, form, logToStdout);
             }
 
             return 0;
         }
 
-        private static void DeleteWebView2UserDataFolder(string userDataFolderName, MainForm form)
+        private static void DeleteWebView2UserDataFolder(string userDataFolderName, MainForm form, bool logToStdout)
         {
             try
             {
@@ -168,7 +182,7 @@ namespace WebPageHost
                 var userDataFolder = (DirectoryInfo)dirInfo.GetDirectories(userDataFolderName).GetValue(0);
                 if (null != userDataFolder)
                 {
-                    AnsiConsole.Markup($"[grey]Cleaning-up user data...[/] ");
+                    if (logToStdout) AnsiConsole.Markup($"[grey]Cleaning-up user data...[/] ");
 
                     form.webView.Dispose(); // Ensure external browser process is exited
 
@@ -198,7 +212,7 @@ namespace WebPageHost
                     }
                     else
                     {
-                        AnsiConsole.MarkupLine($"[grey]Done.[/] ");
+                        if (logToStdout) AnsiConsole.MarkupLine($"[grey]Done.[/] ");
                     }
                 }
             }
