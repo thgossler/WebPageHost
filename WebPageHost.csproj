@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <Title>WebPageHost</Title>
-    <Description>Console CLI app to open a web page from command line in a WebView2 (Chromium).</Description>
+    <Description>Simple Windows Command line (CLI) tool to open URLs in WebView2 (Microsoft Edge web browser control).</Description>
     <ProductName>WebPageHost (Preview)</ProductName>
-    <Copyright>Copyright © Thomas Goßler 2021</Copyright>
-    <Company>Thomas Goßler</Company>
+    <Copyright>Copyright © Thomas Gossler 2022</Copyright>
+    <Company>Thomas Gossler</Company>
   </PropertyGroup>
 
   <Import Project="Version.props" />
@@ -23,6 +23,12 @@
     <IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
     <Deterministic>false</Deterministic>
     <Nullable>enable</Nullable>
+    <PackageProjectUrl>https://github.com/thgossler/WebPageHost</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/thgossler/WebPageHost</RepositoryUrl>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -41,6 +47,17 @@
     <PackageReference Include="InputSimulatorCore" Version="1.0.5" />
     <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.902.49" />
     <PackageReference Include="Spectre.Console" Version="0.41.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
