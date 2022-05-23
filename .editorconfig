@@ -20,7 +20,7 @@ insert_final_newline = false
 # Organize usings
 dotnet_separate_import_directive_groups = false
 dotnet_sort_system_directives_first = true
-file_header_template = unset
+file_header_template = Copyright (c) Thomas Gossler. All rights reserved.\nLicensed under the MIT license.
 
 # this. and Me. preferences
 dotnet_style_qualification_for_event = false
@@ -98,11 +98,11 @@ csharp_style_prefer_pattern_matching = false
 csharp_style_prefer_switch_expression = true
 
 # Null-checking preferences
-csharp_style_conditional_delegate_call = true
-csharp_style_prefer_parameter_null_checking = true
+csharp_style_conditional_delegate_call = true:suggestion
+csharp_style_prefer_parameter_null_checking = true:suggestion
 
 # Modifier preferences
-csharp_prefer_static_local_function = true
+csharp_prefer_static_local_function = true:suggestion
 csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async
 
 # Code-block preferences
@@ -113,25 +113,25 @@ csharp_style_prefer_method_group_conversion = true:silent
 
 # Expression-level preferences
 csharp_prefer_simple_default_expression = true:suggestion
-csharp_style_deconstructed_variable_declaration = false
-csharp_style_implicit_object_creation_when_type_is_apparent = true
-csharp_style_inlined_variable_declaration = true
-csharp_style_prefer_index_operator = false
-csharp_style_prefer_local_over_anonymous_function = true
+csharp_style_deconstructed_variable_declaration = false:suggestion
+csharp_style_implicit_object_creation_when_type_is_apparent = true:suggestion
+csharp_style_inlined_variable_declaration = true:suggestion
+csharp_style_prefer_index_operator = false:suggestion
+csharp_style_prefer_local_over_anonymous_function = true:suggestion
 csharp_style_prefer_null_check_over_type_check = true:suggestion
-csharp_style_prefer_range_operator = false
-csharp_style_prefer_tuple_swap = true
+csharp_style_prefer_range_operator = false:suggestion
+csharp_style_prefer_tuple_swap = true:suggestion
 csharp_style_throw_expression = true:suggestion
-csharp_style_unused_value_assignment_preference = discard_variable
-csharp_style_unused_value_expression_statement_preference = discard_variable
+csharp_style_unused_value_assignment_preference = discard_variable:suggestion
+csharp_style_unused_value_expression_statement_preference = discard_variable:silent
 
 # 'using' directive preferences
 csharp_using_directive_placement = outside_namespace:silent
 
 # New line preferences
-csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true
-csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false
-csharp_style_allow_embedded_statements_on_same_line_experimental = true
+csharp_style_allow_blank_line_after_colon_in_constructor_initializer_experimental = true:silent
+csharp_style_allow_blank_lines_between_consecutive_braces_experimental = false:silent
+csharp_style_allow_embedded_statements_on_same_line_experimental = true:silent
 
 #### C# Formatting Rules ####
 
@@ -320,5 +320,16 @@ dotnet_diagnostic.CA2201.severity = suggestion
 dotnet_diagnostic.CA2215.severity = warning
 dotnet_diagnostic.CA2229.severity = suggestion
 dotnet_diagnostic.CA2251.severity = suggestion
+dotnet_style_readonly_field = true:suggestion
+dotnet_style_predefined_type_for_locals_parameters_members = true:silent
+dotnet_style_predefined_type_for_member_access = true:silent
+dotnet_style_require_accessibility_modifiers = for_non_interface_members:silent
+dotnet_style_allow_multiple_blank_lines_experimental = false:silent
+dotnet_style_allow_statement_immediately_after_block_experimental = true:silent
+dotnet_code_quality_unused_parameters = non_public:suggestion
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:silent
+dotnet_style_parentheses_in_other_operators = never_if_unnecessary:silent
 [*.vb]
 dotnet_diagnostic.CA1047.severity = warning

@@ -1,3 +1,6 @@
+// Copyright (c) Thomas Gossler. All rights reserved.
+// Licensed under the MIT license.
+
 #nullable disable warnings
 
 using System;
@@ -11,10 +14,13 @@ using Spectre.Console.Cli;
 
 namespace WebPageHost;
 
+/// <summary>
+/// Cleans-up user resources in file system and Windows registry.
+/// </summary>
 internal sealed partial class CleanupCommand : Command<CleanupCommandSettings>
 {
     /// <summary>
-    /// Cleanup command implementation.
+    /// Cleanup command handler
     /// </summary>
     /// <param name="context">The command context.</param>
     /// <param name="settings">The provided command line arguments.</param>

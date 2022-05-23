@@ -1,3 +1,6 @@
+// Copyright (c) Thomas Gossler. All rights reserved.
+// Licensed under the MIT license.
+
 #nullable disable warnings
 
 using System;
@@ -18,10 +21,13 @@ using static WebPageHost.ScreenExtensions;
 
 namespace WebPageHost;
 
+/// <summary>
+/// Opens a URL in an embedded WebView2 control.
+/// </summary>
 internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
 {
     /// <summary>
-    /// Open command implementation.
+    /// Open command handler
     /// </summary>
     /// <param name="context">The command context.</param>
     /// <param name="settings">The provided command line arguments.</param>

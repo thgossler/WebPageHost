@@ -1,3 +1,6 @@
+// Copyright (c) Thomas Gossler. All rights reserved.
+// Licensed under the MIT license.
+
 #nullable disable warnings
 
 using System;
@@ -5,6 +8,9 @@ using Spectre.Console.Cli;
 
 namespace WebPageHost;
 
+/// <summary>
+/// Command line interface tool for opening web pages in a WebView2 control.
+/// </summary>
 internal static class Program
 {
     [STAThread]
