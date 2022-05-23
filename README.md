@@ -4,7 +4,7 @@
 
 # WebPageHost
 
-Simple Windows Command line tool to open URLs in WebView2 (Microsoft Edge web browser control).
+Simple Windows Command line (CLI) tool to open URLs in WebView2 (Microsoft Edge web browser control).
 
 [Report Bug](https://github.com/thgossler/WebPageHost/issues) · [Request Feature](https://github.com/thgossler/WebPageHost/issues)
 
