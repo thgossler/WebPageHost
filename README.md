@@ -87,5 +87,5 @@ Project Link: [https://github.com/thgossler/WebPageHost](https://github.com/thgo
 [issues-badge]: https://img.shields.io/github/issues/thgossler/WebPageHost.svg?style=for-the-badge
 [issues-url]: https://github.com/thgossler/WebPageHost/issues
 [license-badge]: https://img.shields.io/github/license/thgossler/WebPageHost.svg?style=for-the-badge
-[license-url]: https://github.com/thgossler/WebPageHost/blob/master/LICENSE.txt
+[license-url]: https://github.com/thgossler/WebPageHost/blob/main/LICENSE.txt
 [product-screenshot]: images/screenshot.png
