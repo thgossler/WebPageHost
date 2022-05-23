@@ -15,7 +15,7 @@ This is a Windows simple command line interface (CLI) tool for opening web page 
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-> _**Note:** This tool was written by me in my spare time and will be developed only sporadically. There is no test suite to minimize the effort for changes._
+> _**Note:** This tool was written by me in my spare time and will be developed only sporadically._
 
 
 ### Built With
@@ -26,7 +26,7 @@ This is a Windows simple command line interface (CLI) tool for opening web page 
 * [Spectre Console Cli](https://github.com/spectreconsole/spectre.console)
 * [InputSimulator.Core](https://github.com/cwevers/InputSimulatorCore)
 
-> _**Note**: I would like to make this tool also available on Linux some day. WinForms was chosen because it was the fasted way to pout this together initially ;-), it is open source and is still supported by Microsoft, and I still haven't given up hope that it will eventually be available on Linux including the WebView2 wrapper control. In case WPF or MAUI should be available on Linux earlier than WinForms, the source code should be migrated. Alternatively, [Avalonia UI](https://avaloniaui.net/) can be considered._
+> _**Note**: I would like to make this tool also available on Linux some day. I have chosen WinForms initially because it was the fasted way for me to put this tool together :smiley:, it is open source and is still supported by Microsoft. And, I still haven't given up hope that it will eventually be available on Linux including the WebView2 wrapper control. In case WPF or MAUI should be available on Linux earlier than WinForms, the source code should be migrated. Alternatively, [Avalonia UI](https://avaloniaui.net/) could be considered._
 
 
 ## Getting Started
