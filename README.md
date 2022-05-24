@@ -40,7 +40,25 @@ This is a Windows simple command line interface (CLI) tool for opening web page 
 * Microsoft Edge WebView2 (if not already installed with the operating system)<br/>
   https://go.microsoft.com/fwlink/p/?LinkId=2124703
 
-### Installation
+### Installation as Tool for Use
+
+1. Download the [self-contained single executable file](https://github.com/thgossler/WebPageHost/releases/download/v1.0.0/WebPageHost.exe) from the [releases](https://github.com/thgossler/WebPageHost/releases) section
+
+2. Copy it to a location where you can easily call it, perhaps in a folder which is in your PATH environment variable
+
+3. Open a command prompt or PowerShell and type `WebPageHost open --help`
+
+4. Try the following simple example:
+   ```
+   WebPageHost open https://github.com/thgossler/WebPageHost
+   ```
+
+5. Try the following more complicated example:
+   ```
+   WebPageHost open "https://github.com/trending?since=monthly&spoken_language_code=en" -z 0.7 -s 800x1024 -x "const regex = new RegExp('github.com\\/([^\\/]+\\/[^\\/]+)', 'gm'); let m = regex.exec(window.location.host+window.location.pathname); 'Selected GitHub project: '+(m !== null ? m[1] : 'none');" --ontop
+   ```
+
+### Installation from Source for Development
 
 1. Clone the repo
    ```sh
