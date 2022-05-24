@@ -50,7 +50,7 @@ This is a Windows simple command line interface (CLI) tool for opening web page 
 
 4. Try the following simple example:
    ```
-   WebPageHost open https://github.com/thgossler/WebPageHost
+   WebPageHost open https://github.com/thgossler/WebPageHost#readme
    ```
 
 5. Try the following more complicated example:
