@@ -11,9 +11,11 @@ Simple Windows Command line (CLI) tool to open URLs in WebView2 (Microsoft Edge 
 
 ## About The Project
 
-This is a Windows simple command line interface (CLI) tool for opening web page URLs in an embedded Microsoft WebView2 control. It has a variety of options to control the behavior of the window and the embedded web browser. Further, it supports customization of the output via JavaScript.
+This is a Windows simple command line interface (CLI) tool for opening web page URLs in an embedded Microsoft WebView2 control. It has a variety of options to control the behavior of the window and the embedded web browser. Further, it supports customization of the output via JavaScript which allows, for example, to use it for letting the user select anything from the web page and return it as result on standard output.
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![WebPageHost Screen Shot #1][product-screenshot]]([https://github.com/thgossler/WebPageHost/])
+
+[![WebPageHost Screen Shot #2][product-screenshot2]]([https://github.com/thgossler/WebPageHost/])
 
 > _**Note:** This tool was written by me in my spare time and will be developed only sporadically._
 
@@ -107,3 +109,4 @@ Project Link: [https://github.com/thgossler/WebPageHost](https://github.com/thgo
 [license-badge]: https://img.shields.io/github/license/thgossler/WebPageHost.svg?style=for-the-badge
 [license-url]: https://github.com/thgossler/WebPageHost/blob/main/LICENSE.txt
 [product-screenshot]: images/screenshot.png
+[product-screenshot2]: images/screenshot2.png
