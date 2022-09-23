@@ -2,7 +2,7 @@
   "profiles": {
     "WebPageHost": {
       "commandName": "Project",
-      "commandLineArgs": "--help",
+      "commandLineArgs": "open --help",
       "jsWebView2Debugging": false
     }
   }

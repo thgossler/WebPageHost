@@ -40,6 +40,38 @@ public partial class MainForm : Form
 
     public string Title { get; set; }
 
+    private string buttonTitle;
+
+    public string ButtonTitle {
+        get => buttonTitle;
+        set {
+            buttonTitle = value;
+            bool showButton = !string.IsNullOrWhiteSpace(buttonTitle);
+            button.Visible = showButton;
+            if (showButton) {
+                button.Text = buttonTitle;
+                button.AutoSize = buttonTitle.Length > 20;
+                UpdateButtonPlacement();
+            }
+        }
+    }
+
+    private void UpdateButtonPlacement()
+    {
+        if (!string.IsNullOrWhiteSpace(buttonTitle)) {
+            button.Left = (Width - button.Width) / 2;
+            button.Top = ClientSize.Height - button.Height - (button.Height / 3);
+            if (WebView != null) {
+                WebView.Height = ClientSize.Height - button.Height - (button.Height * 2 / 3);
+            }
+        }
+        else {
+            if (WebView != null) {
+                WebView.Height = ClientSize.Height;
+            }
+        }
+    }
+
     private readonly bool isTitleGiven;
 
     public bool DisableSso { get; set; }
@@ -94,6 +126,7 @@ public partial class MainForm : Form
         isWebViewInitialized = true;
         NavigateToUrl(Url);
         UpdateFormTitle(Title, Url);
+        UpdateButtonPlacement();
 
         // Raise form loaded event
         FormLoaded?.Invoke(this, new EventArgs());
@@ -163,5 +196,15 @@ public partial class MainForm : Form
     private void NavigateToUrl(string url)
     {
         WebView.CoreWebView2.Navigate(url);
+    }
+
+    private void button_Click(object sender, EventArgs e)
+    {
+        Close();
+    }
+
+    private void MainForm_Resize(object sender, EventArgs e)
+    {
+        UpdateButtonPlacement();
     }
 }

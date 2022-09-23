@@ -125,6 +125,10 @@ internal sealed partial class OpenCommand
         [CommandOption("-x|--resultselector")]
         public string? ResultJavaScript { get; init; }
 
+        [Description("Show button with specified text to close the window (useful with --resultselector).")]
+        [CommandOption("-b|--button")]
+        public string? ShowButtonWithTitle { get; init; }
+
         [Description("Keep the WebView2 user data folder on exit.")]
         [CommandOption("-k|--keepuserdata")]
         [DefaultValue(false)]

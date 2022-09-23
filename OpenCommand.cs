@@ -152,6 +152,11 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
         // Apply the specified top-most argument
         form.TopMost = settings.TopMost;
 
+        // Show button eventually
+        if (!string.IsNullOrWhiteSpace(settings.ShowButtonWithTitle)) {
+            form.ButtonTitle = settings.ShowButtonWithTitle;
+        }
+
         // Show the UI
         Application.Run(form);
 
