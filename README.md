@@ -11,7 +11,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <h3 align="center">WebPageHost</h3>
+  <h1 align="center">WebPageHost</h1>
 
   <p align="center">
     Simple Windows Command line (CLI) tool to open URLs in WebView2 (Microsoft Edge web browser control).
