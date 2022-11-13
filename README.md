@@ -1,12 +1,30 @@
-[![Issues][issues-badge]][issues-url]
-[![MIT License][license-badge]][license-url]
+<div align="center">
 
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
 
-# WebPageHost
+</div>
 
-Simple Windows Command line (CLI) tool to open URLs in WebView2 (Microsoft Edge web browser control).
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <h3 align="center">WebPageHost</h3>
 
-[Report Bug](https://github.com/thgossler/WebPageHost/issues) · [Request Feature](https://github.com/thgossler/WebPageHost/issues)
+  <p align="center">
+    Simple Windows Command line (CLI) tool to open URLs in WebView2 (Microsoft Edge web browser control).
+    <br />
+    <a href="https://github.com/thgossler/WebPageHost/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/thgossler/WebPageHost/issues">Request Feature</a>
+    ·
+    <a href="https://github.com/thgossler/WebPageHost#contributing">Contribute</a>
+    ·
+    <a href="https://github.com/sponsors/thgossler">Sponsor project</a>
+  </p>
+</div>
 
 
 ## About The Project
@@ -94,7 +112,7 @@ Don't forget to give the project a star :wink: Thanks!
 
 ## License
 
-Distributed under the MIT License. See [`LICENSE.txt`](https://github.com/thgossler/WebPageHost/LICENSE.txt) for more information.
+Distributed under the MIT License. See [`LICENSE`](https://github.com/thgossler/WebPageHost/blob/main/LICENSE) for more information.
 
 
 ## Contact
@@ -103,10 +121,16 @@ Thomas Gossler - [@thgossler](https://twitter.com/thgossler)<br/>
 Project Link: [https://github.com/thgossler/WebPageHost](https://github.com/thgossler/WebPageHost)
 
 
-<!-- See: https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[issues-badge]: https://img.shields.io/github/issues/thgossler/WebPageHost.svg?style=for-the-badge
+<!-- MARKDOWN LINKS & IMAGES (https://www.markdownguide.org/basic-syntax/#reference-style-links) -->
+[contributors-shield]: https://img.shields.io/github/contributors/thgossler/WebPageHost.svg
+[contributors-url]: https://github.com/thgossler/WebPageHost/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/thgossler/WebPageHost.svg
+[forks-url]: https://github.com/thgossler/WebPageHost/network/members
+[stars-shield]: https://img.shields.io/github/stars/thgossler/WebPageHost.svg
+[stars-url]: https://github.com/thgossler/WebPageHost/stargazers
+[issues-shield]: https://img.shields.io/github/issues/thgossler/WebPageHost.svg
 [issues-url]: https://github.com/thgossler/WebPageHost/issues
-[license-badge]: https://img.shields.io/github/license/thgossler/WebPageHost.svg?style=for-the-badge
-[license-url]: https://github.com/thgossler/WebPageHost/blob/main/LICENSE.txt
+[license-shield]: https://img.shields.io/github/license/thgossler/WebPageHost.svg
+[license-url]: https://github.com/thgossler/WebPageHost/blob/main/LICENSE
 [product-screenshot]: images/screenshot.png
 [product-screenshot2]: images/screenshot2.png
