@@ -115,12 +115,6 @@ Don't forget to give the project a star :wink: Thanks!
 Distributed under the MIT License. See [`LICENSE`](https://github.com/thgossler/WebPageHost/blob/main/LICENSE) for more information.
 
 
-## Contact
-
-Thomas Gossler - [@thgossler](https://twitter.com/thgossler)<br/>
-Project Link: [https://github.com/thgossler/WebPageHost](https://github.com/thgossler/WebPageHost)
-
-
 <!-- MARKDOWN LINKS & IMAGES (https://www.markdownguide.org/basic-syntax/#reference-style-links) -->
 [contributors-shield]: https://img.shields.io/github/contributors/thgossler/WebPageHost.svg
 [contributors-url]: https://github.com/thgossler/WebPageHost/graphs/contributors
