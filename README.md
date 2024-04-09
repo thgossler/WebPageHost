@@ -40,7 +40,7 @@ This is a Windows simple command line interface (CLI) tool for opening web page 
 
 ### Built With
 
-* [.NET 6 (C#)](https://dotnet.microsoft.com/en-us/)
+* [.NET 8 (C#)](https://dotnet.microsoft.com/en-us/)
 * [WinForms](https://github.com/dotnet/winforms)
 * [WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 * [Spectre Console Cli](https://github.com/spectreconsole/spectre.console)
@@ -62,7 +62,7 @@ This is a Windows simple command line interface (CLI) tool for opening web page 
 
 ### Installation as Tool for Use
 
-1. Download the [self-contained single executable file](https://github.com/thgossler/WebPageHost/releases/download/v1.0.0/WebPageHost.exe) from the [releases](https://github.com/thgossler/WebPageHost/releases) section
+1. Download the [self-contained single executable file]([https://github.com/thgossler/WebPageHost/releases/download/v1.0.3/WebPageHost.exe) from the [releases](https://github.com/thgossler/WebPageHost/releases) section
 
 2. Copy it to a location where you can easily call it, perhaps in a folder which is in your PATH environment variable
 
