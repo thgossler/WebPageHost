@@ -18,6 +18,7 @@ using Spectre.Console.Cli;
 using WindowsInput;
 using WindowsInput.Native;
 using static WebPageHost.ScreenExtensions;
+using Size = System.Drawing.Size;
 
 namespace WebPageHost;
 

@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Spectre.Console;
 using Spectre.Console.Cli;
+using Size = System.Drawing.Size;
 
 namespace WebPageHost;
 
