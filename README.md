@@ -23,6 +23,8 @@
     <a href="https://github.com/thgossler/WebPageHost#contributing">Contribute</a>
     ·
     <a href="https://github.com/sponsors/thgossler">Sponsor project</a>
+    ·
+    <a href="https://www.paypal.com/donate/?hosted_button_id=JVG7PFJ8DMW7J">Sponsor via PayPal</a>
   </p>
 </div>
 
@@ -108,6 +110,15 @@ Don't forget to give the project a star :wink: Thanks!
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+
+## Donate
+
+If you are using the tool but are unable to contribute technically, please consider promoting it and donating an amount that reflects its value to you. You can do so either via PayPal
+
+[![Donate via PayPal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?hosted_button_id=JVG7PFJ8DMW7J)
+
+or via [GitHub Sponsors](https://github.com/sponsors/thgossler).
 
 
 ## License
