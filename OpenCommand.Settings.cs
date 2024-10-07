@@ -140,6 +140,11 @@ internal sealed partial class OpenCommand
         [DefaultValue(false)]
         public bool SuppressCertErrors { get; init; }
 
+        [Description("Launch the application without waiting for a result.")]
+        [CommandOption("-c|--continue")]
+        [DefaultValue(false)]
+        public bool LaunchWithoutWaiting { get; init; }
+
         /// <summary>
         /// Validates all settings.
         /// </summary>

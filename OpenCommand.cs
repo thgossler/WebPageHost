@@ -35,6 +35,19 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
     /// <returns>Program exit code</returns>
     public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
     {
+        if (settings.LaunchWithoutWaiting) {
+            // Execute the process again with exactly the same command line arguments and close this instance immediately
+            var cmdLine = Environment.CommandLine.ToLower().Replace("-c", "").Replace("--continue", "");
+            ProcessStartInfo startInfo = new ProcessStartInfo {
+                FileName = Process.GetCurrentProcess().MainModule.FileName,
+                Arguments = cmdLine.Substring(cmdLine.IndexOf("open")),
+                WindowStyle = ProcessWindowStyle.Hidden,
+                UseShellExecute = true
+            };
+            _ = Process.Start(startInfo);
+            return 0;
+        }
+
         // If a script for custom output is specified then do not output other logs
         bool logToStdout = string.IsNullOrWhiteSpace(settings.ResultJavaScript);
 
