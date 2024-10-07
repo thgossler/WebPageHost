@@ -22,6 +22,7 @@ internal static class Program
 
             _ = config.AddCommand<OpenCommand>("open")
                 .WithDescription("Opens the URL in a new window with an embedded web browser.")
+                .WithExample(new[] { "open", "--help" })
                 .WithExample(new[] { "open", "https://www.google.com/", "--zoomfactor", "0.6" })
                 .WithExample(new[] { "open", "https://www.google.com/", "-x", "document.title" });
 
