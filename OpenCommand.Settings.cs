@@ -135,6 +135,11 @@ internal sealed partial class OpenCommand
         [DefaultValue(false)]
         public bool KeepUserData { get; init; }
 
+        [Description("Suppress SSL/TLS certificate errors.")]
+        [CommandOption("--suppresscerterrors")]
+        [DefaultValue(false)]
+        public bool SuppressCertErrors { get; init; }
+
         /// <summary>
         /// Validates all settings.
         /// </summary>

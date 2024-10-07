@@ -76,8 +76,10 @@ public partial class MainForm : Form
 
     public bool DisableSso { get; set; }
 
+    public bool SuppressCertErrors { get; set; }
+
     // MainForm
-    public MainForm(string userDataFolderName, string url, string title = "", bool disableSso = false)
+    public MainForm(string userDataFolderName, string url, string title = "", bool disableSso = false, bool suppressCertErrors = false)
     {
         if (string.IsNullOrWhiteSpace(userDataFolderName)) {
             throw new ArgumentException("Parameter 'userDataFolderName' is required");
@@ -90,6 +92,7 @@ public partial class MainForm : Form
         Title = title;
         isTitleGiven = !string.IsNullOrWhiteSpace(title);
         DisableSso = disableSso;
+        SuppressCertErrors = suppressCertErrors;
         this.userDataFolderName = userDataFolderName;
 
         AutoScaleMode = AutoScaleMode.Dpi;
@@ -134,6 +137,10 @@ public partial class MainForm : Form
 
     private void WebView_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
     {
+        if (SuppressCertErrors) {
+            WebView.CoreWebView2.CallDevToolsProtocolMethodAsync("Security.setIgnoreCertificateErrors", "{\"ignore\": true}");
+        }
+
         WebView.CoreWebView2.NewWindowRequested += (s, e) => e.NewWindow = WebView.CoreWebView2;
         WebView.CoreWebView2.SourceChanged += (s, e) => url = WebView.Source.AbsoluteUri; // update field directly not using setter to avoid navigation
         WebView.CoreWebView2.DocumentTitleChanged += (s, e) => {

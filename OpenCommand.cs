@@ -61,7 +61,7 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
         // Get WebView2 user folder name
         string userDataFolderName = Common.WebView2UserDataFolderName;
 
-        var form = new MainForm(userDataFolderName, settings.Url, settings.WindowTitle, settings.DisableSingleSignOnUsingOSPrimaryAccount);
+        var form = new MainForm(userDataFolderName, settings.Url, settings.WindowTitle, settings.DisableSingleSignOnUsingOSPrimaryAccount, settings.SuppressCertErrors);
         form.FormLoaded += (s, e) => {
             // Apply the specified zoom factor
             var form = (MainForm)s;
