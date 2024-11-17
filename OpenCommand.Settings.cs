@@ -73,14 +73,14 @@ internal sealed partial class OpenCommand
 
         public FormWindowState WindowState {
             get {
-                FormWindowState style = FormWindowState.Normal;
+                FormWindowState state = FormWindowState.Normal;
                 if (WindowStateArgument.Trim().Equals("Minimized", StringComparison.InvariantCultureIgnoreCase)) {
-                    style = FormWindowState.Minimized;
+                    state = FormWindowState.Minimized;
                 }
                 else if (WindowStateArgument.Trim().Equals("Maximized", StringComparison.InvariantCultureIgnoreCase)) {
-                    style = FormWindowState.Maximized;
+                    state = FormWindowState.Maximized;
                 }
-                return style;
+                return state;
             }
         }
 
@@ -91,14 +91,14 @@ internal sealed partial class OpenCommand
 
         public FormBorderStyle BorderStyle {
             get {
-                FormBorderStyle state = FormBorderStyle.Sizable;
+                FormBorderStyle style = FormBorderStyle.Sizable;
                 if (BorderStyleArgument.Trim().Equals("FixedSingle", StringComparison.InvariantCultureIgnoreCase)) {
-                    state = FormBorderStyle.FixedSingle;
+                    style = FormBorderStyle.FixedSingle;
                 }
                 else if (BorderStyleArgument.Trim().Equals("None", StringComparison.InvariantCultureIgnoreCase)) {
-                    state = FormBorderStyle.None;
+                    style = FormBorderStyle.None;
                 }
-                return state;
+                return style;
             }
         }
 
