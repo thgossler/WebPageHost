@@ -26,10 +26,11 @@
     <PackageProjectUrl>https://github.com/thgossler/WebPageHost</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/thgossler/WebPageHost</RepositoryUrl>
-    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+    <AssemblyVersion>1.0.7.0</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <FileVersion>1.0.6.0</FileVersion>
+    <FileVersion>1.0.7.0</FileVersion>
+    <Version>1.0.7.0</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
