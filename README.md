@@ -139,5 +139,5 @@ Distributed under the MIT License. See [`LICENSE`](https://github.com/thgossler/
 [issues-url]: https://github.com/thgossler/WebPageHost/issues
 [license-shield]: https://img.shields.io/github/license/thgossler/WebPageHost.svg
 [license-url]: https://github.com/thgossler/WebPageHost/blob/main/LICENSE
-[product-screenshot]: images/screenshot.png
-[product-screenshot2]: images/screenshot2.png
+[product-screenshot]: images/screenshot.jpg
+[product-screenshot2]: images/screenshot2.jpg
