@@ -84,6 +84,24 @@ internal sealed partial class OpenCommand
             }
         }
 
+        [Description("Border style, supported values: \"Sizable\", \"FixedSingle\", \"None\". Default: \"Sizable\"")]
+        [CommandOption("-f|--borderstyle")]
+        [DefaultValue("Sizable")]
+        public string BorderStyleArgument { get; init; }
+
+        public FormBorderStyle BorderStyle {
+            get {
+                FormBorderStyle style = FormBorderStyle.Sizable;
+                if (BorderStyleArgument.Trim().Equals("FixedSingle", StringComparison.InvariantCultureIgnoreCase)) {
+                    style = FormBorderStyle.FixedSingle;
+                }
+                else if (BorderStyleArgument.Trim().Equals("None", StringComparison.InvariantCultureIgnoreCase)) {
+                    style = FormBorderStyle.None;
+                }
+                return style;
+            }
+        }
+
         [Description("Target monitor number (e.g. 0 for first monitor). Default: primary monitor")]
         [CommandOption("-m|--monitor")]
         [DefaultValue("-1")]

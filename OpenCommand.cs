@@ -163,6 +163,9 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
         // Apply the specified window state argument
         form.WindowState = settings.WindowState;
 
+        // Apply the specified border style argument
+        form.FormBorderStyle = settings.BorderStyle;
+
         // Apply the specified top-most argument
         form.TopMost = settings.TopMost;
 
