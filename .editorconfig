@@ -261,6 +261,9 @@ dotnet_naming_style.camel_case.capitalization = camel_case
 dotnet_diagnostic.CA1001.severity = warning
 dotnet_diagnostic.CA1805.severity = suggestion
 
+# WFO5001: Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
+dotnet_diagnostic.WFO5001.severity = none
+
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 tab_width = 4

@@ -39,6 +39,9 @@ internal sealed partial class OpenCommand
         /// </summary>
         public Size WindowSize {
             get {
+                if (WindowSizeArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase)) {
+                    return Size.Empty;
+                }
                 Size size = Size.Empty;
                 string[] parts = WindowSizeArgument.Split('x');
                 size.Width = int.Parse(parts[0]);
@@ -54,8 +57,8 @@ internal sealed partial class OpenCommand
 
         public Point WindowLocation {
             get {
-                if (WindowStateArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase) ||
-                    WindowStateArgument.Equals("Center", StringComparison.InvariantCultureIgnoreCase)) {
+                if (WindowLocationArgument.Equals("Last", StringComparison.InvariantCultureIgnoreCase) ||
+                    WindowLocationArgument.Equals("Center", StringComparison.InvariantCultureIgnoreCase)) {
                     return Point.Empty;
                 }
                 Point pos = Point.Empty;
@@ -112,6 +115,11 @@ internal sealed partial class OpenCommand
         [DefaultValue((float)1.0)]
         public float ZoomFactor { get; init; }
 
+        [Description("Enforce a dark color scheme in dark mode if the web page doesn't support it.")]
+        [CommandOption("-d|--forcedarkmode")]
+        [DefaultValue(false)]
+        public bool ForceDarkMode { get; init; }
+
         [Description("Keep window always on top of all other windows (top-most).")]
         [CommandOption("-o|--ontop")]
         [DefaultValue(false)]
@@ -152,6 +160,10 @@ internal sealed partial class OpenCommand
         [CommandOption("-k|--keepuserdata")]
         [DefaultValue(false)]
         public bool KeepUserData { get; init; }
+
+        [Description("Name of the user data environment (useful with --keepuserdata).")]
+        [CommandOption("-e|--envname")]
+        public string? EnvironmentName { get; init; }
 
         [Description("Suppress SSL/TLS certificate errors.")]
         [CommandOption("--suppresscerterrors")]

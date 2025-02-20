@@ -29,6 +29,11 @@ internal sealed partial class CleanupCommand : Command<CleanupCommandSettings>
     {
         // Get WebView2 user folder name
         string userDataFolderName = Common.WebView2UserDataFolderName;
+        var envName = string.Empty;
+        if (!string.IsNullOrWhiteSpace(settings.EnvironmentName)) {
+            envName = settings.EnvironmentName.Replace(" ", "").Replace("\\", "").Replace("/", "").Replace(".", "").Replace("*", "").Replace("?", "");
+            userDataFolderName = $"{userDataFolderName}-{envName}";
+        }
 
         // Delete WebView2 data folder of the current user
         AnsiConsole.Markup($"Removing the current user's web browser persistent data folder... ");
@@ -37,7 +42,7 @@ internal sealed partial class CleanupCommand : Command<CleanupCommandSettings>
 
         // Delete program registry seetings for the current user
         AnsiConsole.Markup($"Removing the current user's registry settings for this program... ");
-        DeleteRegistrySettings();
+        DeleteRegistrySettings(envName);
         AnsiConsole.MarkupLine($"[green]Done[/].");
 
         return 0;
@@ -50,10 +55,7 @@ internal sealed partial class CleanupCommand : Command<CleanupCommandSettings>
     private static void DeleteWebView2UserDataFolder(string userDataFolderName)
     {
         try {
-            string exeFilePath = AppContext.BaseDirectory;
-            string exeDirPath = Path.GetDirectoryName(exeFilePath);
-            var dirInfo = new DirectoryInfo(exeDirPath);
-            var userDataFolder = (DirectoryInfo)dirInfo.GetDirectories(userDataFolderName).GetValue(0);
+            var userDataFolder = new DirectoryInfo(MainForm.UserDataFolderPath);
             if (null != userDataFolder) {
                 bool success = false;
                 try {
@@ -79,20 +81,17 @@ internal sealed partial class CleanupCommand : Command<CleanupCommandSettings>
     /// <summary>
     /// Delete the program registry settings for the current user.
     /// </summary>
-    private static void DeleteRegistrySettings()
+    private static void DeleteRegistrySettings(string envName = "")
     {
         try {
+            var keyPath = Common.ProgramRegistryRootKeyPath;
+            if (!string.IsNullOrWhiteSpace(envName)) {
+                keyPath = $"{keyPath}-{envName}";
+            }
             Registry.CurrentUser.DeleteSubKeyTree(Common.ProgramRegistryRootKeyPath);
         }
         catch (Exception ex) {
             Debug.WriteLine(ex.Message);
         }
     }
-}
-
-/// <summary>
-/// Command line arguments for the cleanup command.
-/// </summary>
-public sealed class CleanupCommandSettings : CommandSettings
-{
 }

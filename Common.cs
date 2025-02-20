@@ -10,6 +10,7 @@ namespace WebPageHost;
 /// </summary>
 internal static class Common
 {
+    public static string ProgramName = "WebPageHost";
     public static string ProgramRegistryRootKeyPath = @"SOFTWARE\WebPageHost";
 
     public static string WebView2UserDataFolderName {

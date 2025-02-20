@@ -59,6 +59,7 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
         _ = Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
+        Application.SetColorMode(SystemColorMode.System);
 
         IntPtr consoleWindowHandle = Win32Interop.GetConsoleWindow();
         if (settings.HideConsole) {
@@ -73,8 +74,13 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
 
         // Get WebView2 user folder name
         string userDataFolderName = Common.WebView2UserDataFolderName;
+        var envName = string.Empty;
+        if (!string.IsNullOrWhiteSpace(settings.EnvironmentName)) {
+            envName = settings.EnvironmentName.Replace(" ", "").Replace("\\", "").Replace("/", "").Replace(".", "").Replace("*", "").Replace("?", "");
+            userDataFolderName = $"{userDataFolderName}-{envName}";
+        }
 
-        var form = new MainForm(userDataFolderName, settings.Url, settings.WindowTitle, settings.DisableSingleSignOnUsingOSPrimaryAccount, settings.SuppressCertErrors);
+        var form = new MainForm(userDataFolderName, settings.Url, settings.WindowTitle, settings.DisableSingleSignOnUsingOSPrimaryAccount, settings.SuppressCertErrors, settings.ForceDarkMode);
         form.FormLoaded += (s, e) => {
             // Apply the specified zoom factor
             var form = (MainForm)s;
@@ -91,7 +97,7 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
             }
 
             // Remember window bounds for the next launch
-            _ = SaveLastWindowBoundsToRegistry(form.Bounds);
+            _ = SaveLastWindowBoundsToRegistry(form.Bounds, envName);
 
             // Print the current browser URL to stdout for external processing
             string lastUrl = form.Url;
@@ -143,28 +149,35 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
         Rectangle? lastBounds = null;
         if (useLastPos || useLastSize) {
             // Load the window bounds from the last session
-            lastBounds = LoadLastWindowsBoundsFromRegistry();
+            lastBounds = LoadLastWindowsBoundsFromRegistry(envName);
         }
-        form.Size = useLastSize ? lastBounds.Value.Size : Helpers.Scale(settings.WindowSize, scaleFactor);
         form.StartPosition = FormStartPosition.Manual;
-        if (settings.WindowLocationArgument.Equals("Center", StringComparison.InvariantCultureIgnoreCase)) {
-            form.Bounds = new Rectangle {
-                X = monitor.WorkingArea.Left + ((monitor.WorkingArea.Width - form.Width) / 2),
-                Y = monitor.WorkingArea.Top + ((monitor.WorkingArea.Height - form.Height) / 2),
-                Width = form.Width,
-                Height = form.Height
-            };
-        }
-        else {
-            form.Location = useLastPos ? lastBounds.Value.Location :
-                new Point { X = monitor.WorkingArea.Left + settings.WindowLocation.X, Y = monitor.WorkingArea.Top + settings.WindowLocation.Y };
-        }
 
         // Apply the specified window state argument
         form.WindowState = settings.WindowState;
 
         // Apply the specified border style argument
         form.FormBorderStyle = settings.BorderStyle;
+
+        var location = useLastPos ? lastBounds.Value.Location :
+            new Point { X = monitor.WorkingArea.Left + settings.WindowLocation.X, Y = monitor.WorkingArea.Top + settings.WindowLocation.Y };
+
+        var size = useLastSize ? lastBounds.Value.Size : Helpers.Scale(settings.WindowSize, scaleFactor);
+
+        if (settings.WindowLocationArgument.Equals("Center", StringComparison.InvariantCultureIgnoreCase)) {
+            form.Bounds = new Rectangle {
+                X = monitor.WorkingArea.Left + ((monitor.WorkingArea.Width - size.Width) / 2),
+                Y = monitor.WorkingArea.Top + ((monitor.WorkingArea.Height - size.Height) / 2),
+                Width = size.Width,
+                Height = size.Height
+            };
+        }
+        else {
+            form.Bounds = new Rectangle {
+                Location = location,
+                Size = size
+            };
+        }
 
         // Apply the specified top-most argument
         form.TopMost = settings.TopMost;
@@ -208,10 +221,7 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
     private static void DeleteWebView2UserDataFolder(string userDataFolderName, MainForm form, bool logToStdout)
     {
         try {
-            string exeFilePath = AppContext.BaseDirectory;
-            string exeDirPath = Path.GetDirectoryName(exeFilePath);
-            var dirInfo = new DirectoryInfo(exeDirPath);
-            var userDataFolder = (DirectoryInfo)dirInfo.GetDirectories(userDataFolderName).GetValue(0);
+            var userDataFolder = new DirectoryInfo(MainForm.UserDataFolderPath);
             if (null != userDataFolder) {
                 if (logToStdout) {
                     AnsiConsole.Markup($"[grey]Cleaning-up user data...[/] ");
@@ -256,12 +266,16 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
     /// </summary>
     /// <param name="lastWindowBounds">The last window bounds.</param>
     /// <returns>True if successfully written, false otherwise.</returns>
-    private static bool SaveLastWindowBoundsToRegistry(Rectangle lastWindowBounds)
+    private static bool SaveLastWindowBoundsToRegistry(Rectangle lastWindowBounds, string envName = "")
     {
         try {
             string l = System.Text.Json.JsonSerializer.Serialize<Point>(lastWindowBounds.Location, new System.Text.Json.JsonSerializerOptions { IgnoreReadOnlyProperties = true });
             string s = System.Text.Json.JsonSerializer.Serialize<Size>(lastWindowBounds.Size, new System.Text.Json.JsonSerializerOptions { IgnoreReadOnlyProperties = true });
-            RegistryKey key = Registry.CurrentUser.CreateSubKey(Common.ProgramRegistryRootKeyPath, true);
+            var keyPath = Common.ProgramRegistryRootKeyPath;
+            if (!string.IsNullOrWhiteSpace(envName)) {
+                keyPath = $"{keyPath}-{envName}";
+            }
+            RegistryKey key = Registry.CurrentUser.CreateSubKey(keyPath, true);
             key.SetValue("LastWindowLocation", l);
             key.SetValue("LastWindowSize", s);
             key.Close();
@@ -277,13 +291,17 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
     /// Loads the last window bounds from Windows registry.
     /// </summary>
     /// <returns>The read last window bounds if successful, default bounds otherwise.</returns>
-    private static Rectangle LoadLastWindowsBoundsFromRegistry()
+    private static Rectangle LoadLastWindowsBoundsFromRegistry(string envName = "")
     {
         var bounds = new Rectangle { X = 0, Y = 0, Width = 1280, Height = 720 };
         try {
             string l = null;
             string s = null;
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(Common.ProgramRegistryRootKeyPath);
+            var keyPath = Common.ProgramRegistryRootKeyPath;
+            if (!string.IsNullOrWhiteSpace(envName)) {
+                keyPath = $"{keyPath}-{envName}";
+            }
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(keyPath);
             if (null != key) {
                 l = (string)key.GetValue("LastWindowLocation");
                 s = (string)key.GetValue("LastWindowSize");
