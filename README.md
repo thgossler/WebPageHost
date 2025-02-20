@@ -40,7 +40,7 @@ This is a Windows simple command line interface (CLI) tool for opening web page 
 
 ### Built With
 
-* [.NET 8 (C#)](https://dotnet.microsoft.com/en-us/)
+* [.NET 9 (C#)](https://dotnet.microsoft.com/en-us/)
 * [WinForms](https://github.com/dotnet/winforms)
 * [WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/)
 * [Spectre Console Cli](https://github.com/spectreconsole/spectre.console)
