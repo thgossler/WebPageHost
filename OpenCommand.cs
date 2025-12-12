@@ -32,8 +32,9 @@ internal sealed partial class OpenCommand : Command<OpenCommand.Settings>
     /// </summary>
     /// <param name="context">The command context.</param>
     /// <param name="settings">The provided command line arguments.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Program exit code</returns>
-    public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings)
+    public override int Execute([NotNull] CommandContext context, [NotNull] Settings settings, CancellationToken cancellationToken)
     {
         if (settings.LaunchWithoutWaiting) {
             // Execute the process again with exactly the same command line arguments and close this instance immediately

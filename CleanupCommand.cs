@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security;
+using System.Threading;
 using Microsoft.Win32;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -24,8 +25,9 @@ internal sealed partial class CleanupCommand : Command<CleanupCommandSettings>
     /// </summary>
     /// <param name="context">The command context.</param>
     /// <param name="settings">The provided command line arguments.</param>
+    /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>Program exit code</returns>
-    public override int Execute([NotNull] CommandContext context, [NotNull] CleanupCommandSettings settings)
+    public override int Execute([NotNull] CommandContext context, [NotNull] CleanupCommandSettings settings, CancellationToken cancellationToken)
     {
         // Get WebView2 user folder name
         string userDataFolderName = Common.WebView2UserDataFolderName;
