@@ -1,0 +1,2 @@
+Issue-ID,Beschreibung,Status,Schweregrad,Story Points,Projektpfad,Art des Speicherorts,Pfad,Linie,Spalte,Incident-ID,Hilfelink,Assemblyname,Assemblyversion,Öffentlicher Schlüssel für Assembly.,Ausschnitt
+Project.0002,Die Zielframeworks des Projekts müssen geändert werden,Active,Mandatory,1,WebPageHost.csproj,File,WebPageHost.csproj,,,,,,,,Aktuelles Zielframework: net9.0-windows7.0 Empfohlenes Zielframework: net10.0--windows7.0
