@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Title>WebPageHost</Title>
     <Description>Simple Windows Command line (CLI) tool to open URLs in WebView2 (Microsoft Edge web browser control).</Description>
