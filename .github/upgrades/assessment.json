@@ -1,0 +1,106 @@
+{
+  "settings": {
+    "components": {
+      "code": false,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2025-12-12T21:56:48.695584Z",
+  "analysisEndTime": "2025-12-12T21:56:53.52143Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 1,
+      "issues": 1,
+      "incidents": 1,
+      "effort": 1
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 1,
+        "Optional": 0,
+        "Potential": 0,
+        "Information": 0
+      },
+      "category": {
+        "Project": 1
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "WebPageHost.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "WebPageHost",
+        "projectKind": "DotNetCoreApp",
+        "frameworks": [
+          "net9.0-windows7.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 13,
+        "numberOfCodeFiles": 11,
+        "linesTotal": 1351,
+        "linesOfCode": 1247,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "388ff6a4-2258-4656-8e09-c9133a2618e5",
+          "ruleId": "Project.0002",
+          "projectPath": "WebPageHost.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Aktuelles Zielframework: net9.0-windows7.0\nEmpfohlenes Zielframework: net10.0--windows7.0",
+              "protected": "Aktuelles Zielframework: net9.0-windows7.0\nEmpfohlenes Zielframework: net10.0--windows7.0"
+            },
+            "kind": "File",
+            "path": "WebPageHost.csproj",
+            "snippet": "Aktuelles Zielframework: net9.0-windows7.0\nEmpfohlenes Zielframework: net10.0--windows7.0",
+            "protectedSnippet": "Aktuelles Zielframework: net9.0-windows7.0\nEmpfohlenes Zielframework: net10.0--windows7.0",
+            "properties": {
+              "CurrentTargetFramework": "net9.0-windows7.0",
+              "RecommendedTargetFramework": "net10.0--windows7.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    }
+  ],
+  "rules": {
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Die Zielframeworks des Projekts m\u00FCssen in das neue Zielframework ge\u00E4ndert werden, das Sie f\u00FCr dieses Upgrade ausgew\u00E4hlt haben.\n\nW\u00E4hrend des Upgrades wird das Zielframework an die entsprechende Plattform angepasst, falls zutreffend. In einigen F\u00E4llen, f\u00FChrte das Upgrade des Projekts zu mehreren Zielframeworks, wenn es Features verwendete, die jetzt \u00FCber eigene Plattformen in modernen .NET-Frameworks (Windows, iOS, Android usw.) verf\u00FCgen.",
+      "label": "Die Zielframeworks des Projekts m\u00FCssen ge\u00E4ndert werden",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "\u00DCbersicht \u00FCber das Portieren von .NET\u00A0Framework zu .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": ".NET-Projekt-SDKs",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}
