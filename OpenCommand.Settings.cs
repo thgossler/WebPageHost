@@ -21,7 +21,7 @@ internal sealed partial class OpenCommand
     /// </summary>
     public sealed class Settings : CommandSettings
     {
-        [Description("URL to open (only supports http/https protocols).")]
+        [Description("URL to open (supports http, https, and file protocols).")]
         [CommandArgument(0, "<url>")]
         public string Url { get; init; }
 
@@ -181,10 +181,25 @@ internal sealed partial class OpenCommand
         /// <returns>ValidationResult</returns>
         public override ValidationResult Validate()
         {
-            if (!(Url.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase) ||     //DevSkim: ignore DS137138
-                  Url.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase)) ||
-                Url.Length < 11) {
-                return ValidationResult.Error("Invalid URL specified (must start with \"http://\" or \"https://\" and be long enough)");  //DevSkim: ignore DS137138
+            bool isValidUrl = Url.StartsWith("http://", StringComparison.InvariantCultureIgnoreCase) ||     //DevSkim: ignore DS137138
+                              Url.StartsWith("https://", StringComparison.InvariantCultureIgnoreCase) ||
+                              Url.StartsWith("file://", StringComparison.InvariantCultureIgnoreCase);
+
+            if (!isValidUrl || Url.Length < 10) {
+                return ValidationResult.Error("Invalid URL specified (must start with \"http://\", \"https://\", or \"file://\" and be long enough)");  //DevSkim: ignore DS137138
+            }
+
+            // For file:// URLs, verify the file exists
+            if (Url.StartsWith("file://", StringComparison.InvariantCultureIgnoreCase)) {
+                try {
+                    var uri = new Uri(Url);
+                    if (!System.IO.File.Exists(uri.LocalPath)) {
+                        return ValidationResult.Error($"File not found: {uri.LocalPath}");
+                    }
+                }
+                catch (Exception ex) {
+                    return ValidationResult.Error($"Invalid file URL: {ex.Message}");
+                }
             }
 
             if (!Regex.Match(WindowSizeArgument, @"\d+x\d+", RegexOptions.IgnoreCase).Success &&
