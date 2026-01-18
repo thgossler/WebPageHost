@@ -32,6 +32,8 @@
 
 This is a Windows simple command line interface (CLI) tool for opening web page URLs in an embedded Microsoft WebView2 control. It has a variety of options to control the behavior of the window and the embedded web browser. Further, it supports customization of the output via JavaScript which allows, for example, to use it for letting the user select anything from the web page and return it as result on standard output.
 
+See also this AI-auto-generated comprehensive description on [DeepWiki](https://deepwiki.com/thgossler/WebPageHost).
+
 [![WebPageHost Screen Shot #1][product-screenshot]]([https://github.com/thgossler/WebPageHost/])
 
 [![WebPageHost Screen Shot #2][product-screenshot2]]([https://github.com/thgossler/WebPageHost/])
